@@ -1015,6 +1015,7 @@
         playerTitle.textContent = story.title;
         playerSummary.textContent = story.summary;
         setPlayerReadyState();
+        if (story.hasRecording && story.audioSources.length) ensureAudio();
         updateFavoriteButton();
         homeView.classList.add("hidden");
         playerView.classList.remove("hidden");
@@ -1053,11 +1054,11 @@
         }
 
         try {
-          await audio.play();
           isPlaying = true;
           playStatus.textContent = "正在播放";
           playLabel.textContent = "暂停";
           setPlayIcon("pause");
+          await audio.play();
         } catch (error) {
           isPlaying = false;
           playStatus.textContent = "再点一次播放";
