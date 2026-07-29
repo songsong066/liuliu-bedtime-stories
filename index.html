@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f2ea" />
+    <title>六六睡前故事</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', "system-ui", "sans-serif"]
+            },
+            boxShadow: {
+              soft: "0 22px 60px rgba(70, 55, 42, .10)",
+              card: "0 10px 26px rgba(158, 139, 190, .10), inset 0 1px 0 rgba(255, 255, 255, .72)"
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  <body class="min-h-screen overflow-hidden bg-[#ede8df] font-sans text-neutral-950 antialiased">
+    <main class="mx-auto my-0 grid h-screen place-items-center">
+      <section
+        id="phoneFrame"
+        class="relative h-[812px] w-[375px] overflow-hidden rounded-[34px] border border-neutral-300 bg-[#fbfaf7] shadow-soft"
+      >
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(158,139,190,.30),transparent_32%),linear-gradient(180deg,#f6f2fb_0%,#f7f3ed_45%,#fffaf4_100%)]"></div>
+
+        <section id="homeView" class="relative h-full overflow-y-auto px-5 pb-8 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <header class="mb-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-[13px] font-medium tracking-[.18em] text-neutral-500">BEDTIME STORIES</p>
+                <h1 class="mt-2 whitespace-nowrap text-[30px] font-semibold leading-[1.1] tracking-normal text-neutral-950">六六的睡前故事</h1>
+              </div>
+              <button class="mt-1 text-neutral-600" aria-label="声音">
+                <i data-lucide="moon" class="h-6 w-6 stroke-[1.8]"></i>
+              </button>
+            </div>
+            <p class="mt-3 max-w-[305px] text-[14px] leading-6 text-neutral-500">点大图就能听。想换故事，点下面的大图标。</p>
+          </header>
+
+          <section class="mt-5">
+            <div class="mb-3 flex items-center justify-between">
+              <h2 class="text-[18px] font-semibold tracking-normal text-neutral-950">现在可以听</h2>
+              <span id="recordingCount" class="text-[13px] text-neutral-500">2 个</span>
+            </div>
+            <div id="recordedShelf" class="grid grid-cols-2 gap-3"></div>
+          </section>
+
+          <section class="mt-4">
+            <div class="mb-3 flex items-center justify-between">
+              <h2 class="text-[18px] font-semibold tracking-normal text-neutral-950">找故事</h2>
+              <span class="text-[13px] text-neutral-500">点图标</span>
+            </div>
+            <div id="categoryShelf" class="grid grid-cols-3 gap-3"></div>
+          </section>
+
+          <section class="mt-4">
+            <div class="mb-3 flex items-center justify-between">
+              <h2 id="shelfTitle" class="text-[20px] font-semibold tracking-normal text-neutral-950">全部故事</h2>
+              <span id="shelfHint" class="text-[13px] text-neutral-500">已录音优先</span>
+            </div>
+            <div id="storyShelf" class="space-y-3 pb-4"></div>
+          </section>
+
+        </section>
+
+        <section id="playerView" class="relative hidden h-full overflow-hidden px-5 pb-5 pt-6">
+          <header class="mb-4 flex items-center justify-between">
+            <button id="backHome" class="flex h-10 w-10 items-center justify-center text-neutral-700" aria-label="返回首页">
+              <i data-lucide="chevron-left" class="h-7 w-7 stroke-[1.8]"></i>
+            </button>
+            <p class="text-[13px] font-medium tracking-[.16em] text-neutral-500">STORY PLAYER</p>
+            <button id="topFavoriteButton" class="flex h-10 w-10 items-center justify-center text-neutral-700" aria-label="喜欢">
+              <i data-lucide="heart" class="h-6 w-6 stroke-[1.8]"></i>
+            </button>
+          </header>
+
+          <article class="overflow-hidden rounded-[32px] border border-white/70 bg-white/75 p-3 shadow-card">
+            <img id="playerImage" class="h-[260px] w-full rounded-[26px] object-cover" alt="" />
+            <div class="px-2 pb-2 pt-5">
+              <p id="playerMeta" class="text-[13px] font-medium text-neutral-500"></p>
+              <h1 id="playerTitle" class="mt-2 text-[28px] font-semibold leading-[1.18] tracking-normal text-neutral-950"></h1>
+              <p id="playerSummary" class="mt-3 text-[15px] leading-6 text-neutral-500"></p>
+            </div>
+          </article>
+
+          <section class="mt-5 rounded-[32px] border border-white/80 bg-[#f6f2fb]/80 px-5 py-5 shadow-card">
+            <div class="mb-4 flex items-center justify-between">
+              <div>
+                <p class="text-[13px] text-neutral-500">播放状态</p>
+                <p id="playStatus" class="mt-1 text-[16px] font-semibold text-neutral-950">等待录音</p>
+              </div>
+              <div id="audioBadge" class="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">
+                <i data-lucide="mic-2" class="h-6 w-6 stroke-[1.8]"></i>
+              </div>
+            </div>
+
+            <div class="mb-2 flex items-center justify-between text-[12px] font-medium text-neutral-500">
+              <span id="currentTime">0:00</span>
+              <span id="durationTime">--:--</span>
+            </div>
+            <div class="relative mb-5 h-8">
+              <div class="absolute left-0 right-0 top-1/2 h-2 -translate-y-1/2 overflow-hidden rounded-full bg-neutral-200">
+                <div id="progressBar" class="h-full w-0 rounded-full bg-[#9e8bbe] transition-[width] duration-150"></div>
+              </div>
+              <input
+                id="seekBar"
+                class="absolute inset-x-[-2px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none bg-transparent disabled:cursor-not-allowed disabled:opacity-50 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#9e8bbe] [&::-moz-range-thumb]:shadow-[0_4px_12px_rgba(158,139,190,.35)] [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-[-6px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#9e8bbe] [&::-webkit-slider-thumb]:shadow-[0_4px_12px_rgba(158,139,190,.35)]"
+                type="range"
+                min="0"
+                max="1000"
+                value="0"
+                disabled
+                aria-label="拖动播放进度"
+              />
+            </div>
+
+            <div class="flex items-center justify-center gap-6">
+              <button id="restartButton" class="flex h-12 w-12 items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_10px_22px_rgba(158,139,190,.22)] transition active:scale-95" aria-label="回到开头">
+                <i data-lucide="skip-back" class="h-6 w-6 stroke-[1.9]"></i>
+              </button>
+              <button id="playButton" class="mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_14px_30px_rgba(158,139,190,.30)] transition active:scale-[.96]" aria-label="播放">
+                <i id="playIcon" data-lucide="play" class="h-9 w-9 fill-current stroke-[1.8]"></i>
+                <span id="playLabel" class="sr-only">播放</span>
+              </button>
+              <button id="forwardButton" class="flex h-12 w-12 items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_10px_22px_rgba(158,139,190,.22)] transition active:scale-95" aria-label="快进十五秒">
+                <i data-lucide="skip-forward" class="h-6 w-6 stroke-[1.9]"></i>
+              </button>
+            </div>
+          </section>
+
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const STORIES = [
+        {
+          id: "koala-plane",
+          title: "考拉坐飞机的一天",
+          tag: "旅行",
+          category: "交通旅行",
+          hasRecording: true,
+          minutes: 8,
+          image: "public/assets/story-covers/koala-plane.jpg",
+          icon: "plane",
+          summary: "考拉卡伊和妹妹沙伦坐大飞机去考拉隆坡看奶奶，机场、安检、登机和飞机餐都变成了一场热闹旅行。",
+          audioSources: ["public/assets/real-audio/koala-plane-dad.mp3?v=20260729-dad1"]
+        },
+        {
+          id: "crab-kaka",
+          title: "小螃蟹咔咔的勇敢探险",
+          tag: "勇敢",
+          category: "动物朋友",
+          hasRecording: false,
+          minutes: 5,
+          image: "public/assets/story-covers/crab-kaka.jpg",
+          icon: "shell",
+          summary: "小螃蟹咔咔想把彩虹贝壳送给妈妈，遇到沙坑、海藻和黑夜，最后学会勇敢往前走一小步。",
+          audioSources: []
+        },
+        {
+          id: "moose-firefighter",
+          title: "驼鹿消防员的一天",
+          tag: "消防员",
+          category: "交通旅行",
+          hasRecording: false,
+          minutes: 5,
+          image: "public/assets/story-covers/moose-firefighter.jpg",
+          icon: "flame-kindling",
+          summary: "驼鹿在消防站训练、出警、救援，最后用自己的大鹿角救下二十一只小豚鼠，成为真正的消防员。",
+          audioSources: []
+        },
+        {
+          id: "magic-pocket-courage",
+          title: "神奇口袋里的勇气",
+          tag: "勇气",
+          category: "勇敢冒险",
+          hasRecording: false,
+          minutes: 5,
+          image: "public/assets/story-covers/magic-pocket-courage.jpg",
+          icon: "sparkles",
+          summary: "小兔波波用星星口袋收集勇气，从害怕黑影到陪朋友走进草丛，一步一步变成小勇士。",
+          audioSources: []
+        },
+        {
+          id: "forest-magic-night",
+          title: "森林里的奇妙夜",
+          tag: "睡前",
+          category: "睡前安抚",
+          hasRecording: true,
+          minutes: 4,
+          image: "public/assets/story-covers/forest-magic-night.jpg",
+          icon: "moon-star",
+          summary: "小熊猫乐乐走进夜晚森林，看见萤火虫、发光蘑菇和夜光鹿，发现黑夜也可以很美好。",
+          audioSources: ["public/assets/real-audio/forest-magic-night-recording.mp3?v=20260729-recording1"]
+        },
+        {
+          id: "hedgehog-soft-hug",
+          title: "小刺猬的软软拥抱",
+          tag: "情绪",
+          category: "动物朋友",
+          hasRecording: false,
+          minutes: 4,
+          image: "public/assets/story-covers/hedgehog-soft-hug.jpg",
+          icon: "heart",
+          summary: "小刺猬团团因为背上的刺不能拥抱朋友而难过，后来发现自己的特别之处也能保护朋友。",
+          audioSources: []
+        },
+        {
+          id: "snail-slow-delivery",
+          title: "小蜗牛的慢吞吞快递",
+          tag: "成长",
+          category: "生活习惯",
+          hasRecording: false,
+          minutes: 4,
+          image: "public/assets/story-covers/snail-slow-delivery.jpg",
+          icon: "package",
+          summary: "小蜗牛慢慢送快递虽然很慢，却把一路上的花香、鸟鸣和阳光都带给了大家。",
+          audioSources: []
+        }
+      ];
+
+      const CATEGORIES = [
+        { id: "all", label: "全部", icon: "library" },
+        { id: "动物朋友", label: "动物", icon: "rabbit" },
+        { id: "勇敢冒险", label: "冒险", icon: "sparkles" },
+        { id: "睡前安抚", label: "晚安", icon: "moon-star" },
+        { id: "交通旅行", label: "出行", icon: "plane" },
+        { id: "生活习惯", label: "习惯", icon: "leaf" }
+      ];
+
+      let currentStory = STORIES[0];
+      let selectedCategory = "all";
+      let activeAudio = null;
+      let isPlaying = false;
+      const FALLBACK_IMAGE = "public/assets/story-covers/forest-magic-night.jpg";
+
+      const homeView = document.getElementById("homeView");
+      const playerView = document.getElementById("playerView");
+      const recordedShelf = document.getElementById("recordedShelf");
+      const categoryShelf = document.getElementById("categoryShelf");
+      const storyShelf = document.getElementById("storyShelf");
+      const shelfTitle = document.getElementById("shelfTitle");
+      const shelfHint = document.getElementById("shelfHint");
+      const recordingCount = document.getElementById("recordingCount");
+      const playerImage = document.getElementById("playerImage");
+      const playerMeta = document.getElementById("playerMeta");
+      const playerTitle = document.getElementById("playerTitle");
+      const playerSummary = document.getElementById("playerSummary");
+      const playStatus = document.getElementById("playStatus");
+      const playButton = document.getElementById("playButton");
+      const playIcon = document.getElementById("playIcon");
+      const playLabel = document.getElementById("playLabel");
+      const audioBadge = document.getElementById("audioBadge");
+      const progressBar = document.getElementById("progressBar");
+      const seekBar = document.getElementById("seekBar");
+      const currentTime = document.getElementById("currentTime");
+      const durationTime = document.getElementById("durationTime");
+      let pendingSeekRatio = null;
+
+      function formatTime(seconds) {
+        if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
+        const total = Math.floor(seconds);
+        return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+      }
+
+      function setPlayIcon(name) {
+        playIcon.setAttribute("data-lucide", name);
+        playIcon.classList.toggle("fill-current", name === "play");
+        lucide.createIcons();
+      }
+
+      function updateProgress(current, duration) {
+        const ratio = duration ? Math.min(Math.max(current / duration, 0), 1) : 0;
+        progressBar.style.width = `${ratio * 100}%`;
+        seekBar.value = String(Math.round(ratio * 1000));
+        currentTime.textContent = formatTime(current);
+        durationTime.textContent = duration ? formatTime(duration) : durationTime.textContent;
+      }
+
+      function wireAudioEvents(audio) {
+        audio.onloadedmetadata = () => {
+          durationTime.textContent = formatTime(audio.duration);
+          if (pendingSeekRatio !== null && Number.isFinite(audio.duration)) {
+            audio.currentTime = pendingSeekRatio * audio.duration;
+            pendingSeekRatio = null;
+          }
+          updateProgress(audio.currentTime, audio.duration);
+        };
+        audio.ontimeupdate = () => {
+          updateProgress(audio.currentTime, audio.duration);
+        };
+        audio.onended = () => {
+          isPlaying = false;
+          playStatus.textContent = "故事讲完了";
+          playLabel.textContent = "重播";
+          setPlayIcon("rotate-ccw");
+        };
+      }
+
+      function ensureAudio() {
+        if (activeAudio) return activeAudio;
+        if (!currentStory.audioSources.length) return null;
+        activeAudio = new Audio(currentStory.audioSources[0]);
+        activeAudio.preload = "metadata";
+        wireAudioEvents(activeAudio);
+        activeAudio.load();
+        return activeAudio;
+      }
+
+      function setPlayerReadyState() {
+        const hasAudio = currentStory.hasRecording && currentStory.audioSources.length > 0;
+        playStatus.textContent = hasAudio ? "可以播放" : "等待录音";
+        playLabel.textContent = hasAudio ? "播放" : "待录音";
+        playButton.disabled = !hasAudio;
+        seekBar.disabled = !hasAudio;
+        playButton.className = hasAudio
+          ? "mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_14px_30px_rgba(158,139,190,.30)] transition active:scale-[.96]"
+          : "mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-neutral-300 text-white shadow-card";
+        audioBadge.innerHTML = hasAudio
+          ? '<i data-lucide="headphones" class="h-6 w-6 stroke-[1.8]"></i>'
+          : '<i data-lucide="mic-2" class="h-6 w-6 stroke-[1.8]"></i>';
+        audioBadge.className = hasAudio
+          ? "flex h-11 w-11 items-center justify-center rounded-full bg-[#9e8bbe]/20 text-neutral-600"
+          : "flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-neutral-500";
+        currentTime.textContent = "0:00";
+        durationTime.textContent = hasAudio ? `${currentStory.minutes}:00` : "--:--";
+        progressBar.style.width = "0%";
+        seekBar.value = "0";
+        pendingSeekRatio = null;
+        setPlayIcon(hasAudio ? "play" : "mic-off");
+      }
+
+      function getVisibleStories() {
+        const visible = STORIES.filter((story) => {
+          if (selectedCategory === "all") return true;
+          if (selectedCategory === "recorded") return story.hasRecording;
+          return story.category === selectedCategory;
+        });
+        return visible.sort((a, b) => {
+          if (a.hasRecording !== b.hasRecording) return a.hasRecording ? -1 : 1;
+          return STORIES.indexOf(a) - STORIES.indexOf(b);
+        });
+      }
+
+      function updateShelfHeader(visibleStories) {
+        const category = CATEGORIES.find((item) => item.id === selectedCategory);
+        const recorded = visibleStories.filter((story) => story.hasRecording).length;
+        shelfTitle.textContent = category ? category.label : "全部故事";
+        shelfHint.textContent = `${visibleStories.length} 个故事 · ${recorded} 个可听`;
+        recordingCount.textContent = `${STORIES.filter((story) => story.hasRecording).length} 个`;
+      }
+
+      function renderRecordedShelf() {
+        recordedShelf.innerHTML = "";
+        STORIES.filter((story) => story.hasRecording).forEach((story) => {
+          const card = document.createElement("button");
+          card.className =
+            "group overflow-hidden rounded-[24px] border border-white/90 bg-white/68 p-2 text-left shadow-card backdrop-blur-sm transition active:scale-[.98]";
+          card.innerHTML = `
+            <img class="h-[92px] w-full rounded-[19px] object-cover" src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <span class="mt-2 flex items-center justify-between gap-2 px-1">
+              <strong class="line-clamp-2 text-[15px] font-semibold leading-[1.2] text-neutral-950">${story.title}</strong>
+              <i data-lucide="play-circle" class="h-6 w-6 shrink-0 text-[#9e8bbe] stroke-[1.8]"></i>
+            </span>
+          `;
+          card.addEventListener("click", () => openPlayer(story));
+          recordedShelf.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+
+      function renderCategoryShelf() {
+        categoryShelf.innerHTML = "";
+        CATEGORIES.forEach((category) => {
+          const count = category.id === "recorded"
+            ? STORIES.filter((story) => story.hasRecording).length
+            : category.id === "all"
+              ? STORIES.length
+              : STORIES.filter((story) => story.category === category.id).length;
+          const isActive = selectedCategory === category.id;
+          const card = document.createElement("button");
+          card.className = isActive
+            ? "flex h-[84px] flex-col items-center justify-center rounded-[24px] border border-[#9e8bbe]/45 bg-[#9e8bbe]/18 text-center shadow-card transition active:scale-[.98]"
+            : "flex h-[84px] flex-col items-center justify-center rounded-[24px] border border-white/90 bg-white/62 text-center shadow-card backdrop-blur-sm transition active:scale-[.98]";
+          card.innerHTML = `
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${isActive ? "bg-[#9e8bbe] text-white" : "bg-white/80 text-neutral-500"}">
+              <i data-lucide="${category.icon}" class="h-6 w-6 stroke-[1.8]"></i>
+            </span>
+            <span class="mt-2 min-w-0">
+              <strong class="block whitespace-nowrap text-[14px] font-semibold text-neutral-950">${category.label}</strong>
+              <span class="sr-only">${count} 个故事</span>
+            </span>
+          `;
+          card.addEventListener("click", () => {
+            selectedCategory = category.id;
+            renderHome();
+          });
+          categoryShelf.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+
+      function renderStoryShelf() {
+        storyShelf.innerHTML = "";
+        const visibleStories = getVisibleStories();
+        updateShelfHeader(visibleStories);
+        if (!visibleStories.length) {
+          storyShelf.innerHTML = '<div class="rounded-[26px] border border-white/90 bg-white/62 p-5 text-[14px] leading-6 text-neutral-500 shadow-card">这个分类还没有故事，后面放进来会自动出现在这里。</div>';
+          return;
+        }
+        visibleStories.forEach((story) => {
+          const card = document.createElement("button");
+          card.className =
+            "group grid w-full grid-cols-[78px_1fr_28px] items-center gap-4 rounded-[26px] border border-white/90 bg-white/64 p-3 text-left shadow-card backdrop-blur-sm transition duration-200 active:scale-[.985]";
+          card.innerHTML = `
+            <img class="h-[78px] w-[78px] rounded-[20px] object-cover" src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <span class="min-w-0">
+              <span class="block text-[12px] font-medium text-neutral-500">${story.category} · ${story.minutes} 分钟${story.hasRecording ? " · 可听" : ""}</span>
+              <strong class="mt-1 block text-[19px] font-semibold leading-[1.22] tracking-normal text-neutral-950">${story.title}</strong>
+            </span>
+            <i data-lucide="${story.hasRecording ? "headphones" : story.icon}" class="h-6 w-6 text-neutral-500 stroke-[1.8]"></i>
+          `;
+          card.addEventListener("click", () => openPlayer(story));
+          storyShelf.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+
+      function renderHome() {
+        renderRecordedShelf();
+        renderCategoryShelf();
+        renderStoryShelf();
+      }
+
+      function openPlayer(story) {
+        currentStory = story;
+        stopAudio();
+        playerImage.onerror = () => {
+          playerImage.onerror = null;
+          playerImage.src = FALLBACK_IMAGE;
+        };
+        playerImage.src = story.image;
+        playerMeta.textContent = `${story.tag} · ${story.minutes} 分钟`;
+        playerTitle.textContent = story.title;
+        playerSummary.textContent = story.summary;
+        setPlayerReadyState();
+        homeView.classList.add("hidden");
+        playerView.classList.remove("hidden");
+      }
+
+      function stopAudio() {
+        if (activeAudio) {
+          activeAudio.pause();
+          activeAudio.currentTime = 0;
+          activeAudio = null;
+        }
+        isPlaying = false;
+        const hasAudio = currentStory.hasRecording && currentStory.audioSources.length;
+        setPlayIcon(hasAudio ? "play" : "mic-off");
+        if (playLabel) playLabel.textContent = hasAudio ? "播放" : "待录音";
+      }
+
+      function playCurrentStory() {
+        if (!currentStory.hasRecording || !currentStory.audioSources.length) {
+          playStatus.textContent = "录音接入后就能播放";
+          progressBar.style.width = "0%";
+          return;
+        }
+
+        ensureAudio();
+
+        if (activeAudio && isPlaying) {
+          activeAudio.pause();
+          isPlaying = false;
+          playStatus.textContent = "已暂停";
+          playLabel.textContent = "继续";
+          setPlayIcon("play");
+          return;
+        }
+
+        if (activeAudio && !isPlaying) {
+          activeAudio.play();
+          isPlaying = true;
+          playStatus.textContent = "正在播放";
+          playLabel.textContent = "暂停";
+          setPlayIcon("pause");
+          return;
+        }
+
+        activeAudio.play();
+        isPlaying = true;
+        playStatus.textContent = "正在播放";
+        playLabel.textContent = "暂停";
+        setPlayIcon("pause");
+      }
+
+      document.getElementById("backHome").addEventListener("click", () => {
+        stopAudio();
+        playerView.classList.add("hidden");
+        homeView.classList.remove("hidden");
+      });
+
+      document.getElementById("restartButton").addEventListener("click", () => {
+        if (!activeAudio) {
+          playCurrentStory();
+          return;
+        }
+        activeAudio.currentTime = 0;
+        if (!isPlaying) playCurrentStory();
+      });
+
+      playButton.addEventListener("click", playCurrentStory);
+      document.getElementById("topFavoriteButton").addEventListener("click", () => {
+        playStatus.textContent = "已加入六六喜欢";
+      });
+      document.getElementById("forwardButton").addEventListener("click", () => {
+        const audio = ensureAudio();
+        if (!audio || !Number.isFinite(audio.duration)) return;
+        audio.currentTime = Math.min(audio.currentTime + 15, audio.duration);
+        updateProgress(audio.currentTime, audio.duration);
+      });
+      seekBar.addEventListener("input", () => {
+        const ratio = Number(seekBar.value) / 1000;
+        progressBar.style.width = `${ratio * 100}%`;
+        const duration = activeAudio && Number.isFinite(activeAudio.duration) ? activeAudio.duration : currentStory.minutes * 60;
+        currentTime.textContent = formatTime(ratio * duration);
+      });
+      seekBar.addEventListener("change", () => {
+        const audio = ensureAudio();
+        const ratio = Number(seekBar.value) / 1000;
+        if (!audio) return;
+        if (Number.isFinite(audio.duration)) {
+          audio.currentTime = ratio * audio.duration;
+          updateProgress(audio.currentTime, audio.duration);
+        } else {
+          pendingSeekRatio = ratio;
+        }
+      });
+
+      renderHome();
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
