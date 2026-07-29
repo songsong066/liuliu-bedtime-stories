@@ -2,174 +2,687 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f6f2ea" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fbfaf7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="六六睡前故事" />
     <title>六六睡前故事</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', "system-ui", "sans-serif"]
-            },
-            boxShadow: {
-              soft: "0 22px 60px rgba(70, 55, 42, .10)",
-              card: "0 10px 26px rgba(158, 139, 190, .10), inset 0 1px 0 rgba(255, 255, 255, .72)"
-            }
-          }
-        }
-      };
-    </script>
     <style>
-      @media (max-width: 480px) {
+      :root {
+        --paper: #fbfaf7;
+        --wash: #f4eff8;
+        --line: rgba(255, 255, 255, 0.82);
+        --text: #0f0f10;
+        --muted: #737373;
+        --soft: #f1f1f1;
+        --accent: #9e8bbe;
+        --accent-soft: rgba(158, 139, 190, 0.18);
+        --shadow: 0 16px 36px rgba(64, 50, 38, 0.09);
+        --card-shadow: 0 10px 24px rgba(158, 139, 190, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        background: var(--paper);
+        color: var(--text);
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      button {
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .app-shell {
+        min-height: 100dvh;
+      }
+
+      .phone {
+        position: relative;
+        min-height: 100dvh;
+        overflow: visible;
+        background: var(--paper);
+      }
+
+      .backdrop {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 16% 6%, rgba(158, 139, 190, 0.26), transparent 34%),
+          linear-gradient(180deg, #f6f2fb 0%, #f8f3ee 48%, #fffaf4 100%);
+      }
+
+      .view {
+        position: relative;
+        min-height: 100dvh;
+        padding: 26px 20px calc(28px + env(safe-area-inset-bottom));
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .top-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+      }
+
+      .home-title {
+        margin: 8px 0 0;
+        white-space: nowrap;
+        font-size: 30px;
+        line-height: 1.08;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .hint {
+        margin: 12px 0 0;
+        max-width: 305px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.75;
+      }
+
+      .icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        color: #454545;
+      }
+
+      .icon {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        stroke-width: 1.9;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+
+      .icon.fill {
+        fill: currentColor;
+      }
+
+      .icon .fill {
+        fill: currentColor;
+        stroke: none;
+      }
+
+      .icon-button.is-favorite {
+        color: var(--accent);
+      }
+
+      .icon-button.is-favorite .icon {
+        fill: currentColor;
+      }
+
+      #playIcon .icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .section {
+        margin-top: 22px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .section-note {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .recorded-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .recorded-card,
+      .category-card,
+      .story-card,
+      .story-panel,
+      .audio-panel {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.66);
+        box-shadow: var(--card-shadow);
+        backdrop-filter: blur(8px);
+      }
+
+      .recorded-card {
+        overflow: hidden;
+        border-radius: 24px;
+        padding: 8px;
+        text-align: left;
+        transition: transform 0.18s ease;
+      }
+
+      .recorded-card:active,
+      .category-card:active,
+      .story-card:active,
+      .round-control:active,
+      .play-control:active {
+        transform: scale(0.97);
+      }
+
+      .recorded-card img {
+        width: 100%;
+        height: 92px;
+        border-radius: 19px;
+        object-fit: cover;
+      }
+
+      .recorded-card strong {
+        display: block;
+        min-height: 36px;
+        margin-top: 9px;
+        padding: 0 2px;
+        font-size: 15px;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .recorded-card .mini-play {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .recorded-card .mini-play .icon {
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .category-card {
+        display: flex;
+        height: 84px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 24px;
+        text-align: center;
+      }
+
+      .category-card.active {
+        border-color: rgba(158, 139, 190, 0.45);
+        background: var(--accent-soft);
+      }
+
+      .category-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.78);
+        color: #656565;
+      }
+
+      .category-card.active .category-icon {
+        background: var(--accent);
+        color: white;
+      }
+
+      .category-label {
+        margin-top: 7px;
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .story-list {
+        display: grid;
+        gap: 12px;
+        padding-bottom: 16px;
+      }
+
+      .story-card {
+        display: grid;
+        grid-template-columns: 78px minmax(0, 1fr) 28px;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        border-radius: 26px;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .story-card img {
+        width: 78px;
+        height: 78px;
+        border-radius: 20px;
+        object-fit: cover;
+      }
+
+      .story-card small {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .story-card strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 19px;
+        line-height: 1.22;
+        font-weight: 700;
+      }
+
+      .player-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+
+      .player-title-top {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+      }
+
+      .story-panel {
+        overflow: hidden;
+        border-radius: 32px;
+        padding: 12px;
+      }
+
+      .player-cover {
+        width: 100%;
+        height: 232px;
+        border-radius: 26px;
+        object-fit: cover;
+      }
+
+      .story-copy {
+        padding: 20px 10px 10px;
+      }
+
+      .meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .story-name {
+        margin: 8px 0 0;
+        font-size: 31px;
+        line-height: 1.18;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .summary {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.75;
+      }
+
+      .audio-panel {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        margin-top: 18px;
+        border-radius: 32px 32px 0 0;
+        padding: 18px 20px calc(20px + env(safe-area-inset-bottom));
+        background: rgba(246, 242, 251, 0.94);
+      }
+
+      .status-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 15px;
+      }
+
+      .status-label {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .status-text {
+        margin: 3px 0 0;
+        color: var(--text);
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .audio-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: var(--accent-soft);
+        color: #575757;
+      }
+
+      .time-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 7px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .seek-wrap {
+        position: relative;
+        height: 34px;
+        margin-bottom: 18px;
+      }
+
+      .seek-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 8px;
+        transform: translateY(-50%);
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e4e4e4;
+      }
+
+      .seek-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--accent);
+      }
+
+      .seek {
+        position: absolute;
+        inset: 0 -2px;
+        width: calc(100% + 4px);
+        appearance: none;
+        background: transparent;
+      }
+
+      .seek:disabled {
+        opacity: 0.45;
+      }
+
+      .seek::-webkit-slider-runnable-track {
+        height: 8px;
+        background: transparent;
+      }
+
+      .seek::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+        margin-top: -8px;
+        appearance: none;
+        border: 5px solid white;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 4px 14px rgba(158, 139, 190, 0.4);
+      }
+
+      .seek::-moz-range-track {
+        height: 8px;
+        background: transparent;
+      }
+
+      .seek::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border: 5px solid white;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 4px 14px rgba(158, 139, 190, 0.4);
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+      }
+
+      .round-control,
+      .play-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 12px 24px rgba(158, 139, 190, 0.24);
+        transition: transform 0.18s ease;
+      }
+
+      .round-control {
+        width: 50px;
+        height: 50px;
+      }
+
+      .play-control {
+        width: 76px;
+        height: 76px;
+      }
+
+      .play-control:disabled,
+      .round-control:disabled {
+        background: #d5d5d5;
+        box-shadow: none;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      @media (min-width: 481px) {
         body {
-          background: #fbfaf7;
+          background: #ede8df;
         }
 
-        main {
-          display: block;
-          min-height: 100dvh;
+        .app-shell {
+          display: grid;
+          place-items: center;
+          padding: 28px;
         }
 
-        #phoneFrame {
-          width: 100vw;
-          min-height: 100dvh;
-          height: auto;
-          border: 0;
-          border-radius: 0;
-          box-shadow: none;
-          overflow: visible;
+        .phone {
+          width: 375px;
+          height: 812px;
+          min-height: 812px;
+          overflow: hidden;
+          border: 1px solid #d6d6d6;
+          border-radius: 34px;
+          box-shadow: var(--shadow);
         }
 
-        #homeView,
-        #playerView {
-          min-height: 100dvh;
-          height: auto;
-          overflow-y: visible;
-          padding-bottom: calc(28px + env(safe-area-inset-bottom));
+        .backdrop {
+          position: absolute;
         }
 
-        #playerImage {
-          height: 232px;
+        .view {
+          height: 100%;
+          min-height: 0;
+          overflow-y: auto;
+          scrollbar-width: none;
+        }
+
+        .view::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .view {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        .story-name {
+          font-size: 28px;
+        }
+
+        .controls {
+          gap: 22px;
         }
       }
     </style>
   </head>
-  <body class="min-h-screen overflow-x-hidden bg-[#ede8df] font-sans text-neutral-950 antialiased">
-    <main class="mx-auto my-0 grid min-h-screen place-items-center">
-      <section
-        id="phoneFrame"
-        class="relative h-[812px] w-[375px] overflow-hidden rounded-[34px] border border-neutral-300 bg-[#fbfaf7] shadow-soft"
-      >
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(158,139,190,.30),transparent_32%),linear-gradient(180deg,#f6f2fb_0%,#f7f3ed_45%,#fffaf4_100%)]"></div>
+  <body>
+    <main class="app-shell">
+      <section class="phone" id="phoneFrame">
+        <div class="backdrop"></div>
 
-        <section id="homeView" class="relative h-full overflow-y-auto px-5 pb-8 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <header class="mb-4">
-            <div class="flex items-start justify-between">
+        <section class="view" id="homeView">
+          <header>
+            <div class="top-row">
               <div>
-                <p class="text-[13px] font-medium tracking-[.18em] text-neutral-500">BEDTIME STORIES</p>
-                <h1 class="mt-2 whitespace-nowrap text-[30px] font-semibold leading-[1.1] tracking-normal text-neutral-950">六六的睡前故事</h1>
+                <p class="eyebrow">BEDTIME STORIES</p>
+                <h1 class="home-title">六六的睡前故事</h1>
               </div>
-              <button class="mt-1 text-neutral-600" aria-label="声音">
-                <i data-lucide="moon" class="h-6 w-6 stroke-[1.8]"></i>
-              </button>
+              <button class="icon-button" aria-label="夜间模式" type="button" data-static-icon="moon"></button>
             </div>
-            <p class="mt-3 max-w-[305px] text-[14px] leading-6 text-neutral-500">点大图就能听。想换故事，点下面的大图标。</p>
+            <p class="hint">点大图就能听。想换故事，点下面的大图标。</p>
           </header>
 
-          <section class="mt-5">
-            <div class="mb-3 flex items-center justify-between">
-              <h2 class="text-[18px] font-semibold tracking-normal text-neutral-950">现在可以听</h2>
-              <span id="recordingCount" class="text-[13px] text-neutral-500">2 个</span>
+          <section class="section">
+            <div class="section-head">
+              <h2 class="section-title">现在可以听</h2>
+              <span class="section-note" id="recordingCount">2 个</span>
             </div>
-            <div id="recordedShelf" class="grid grid-cols-2 gap-3"></div>
+            <div class="recorded-grid" id="recordedShelf"></div>
           </section>
 
-          <section class="mt-4">
-            <div class="mb-3 flex items-center justify-between">
-              <h2 class="text-[18px] font-semibold tracking-normal text-neutral-950">找故事</h2>
-              <span class="text-[13px] text-neutral-500">点图标</span>
+          <section class="section">
+            <div class="section-head">
+              <h2 class="section-title">找故事</h2>
+              <span class="section-note">点图标</span>
             </div>
-            <div id="categoryShelf" class="grid grid-cols-3 gap-3"></div>
+            <div class="category-grid" id="categoryShelf"></div>
           </section>
 
-          <section class="mt-4">
-            <div class="mb-3 flex items-center justify-between">
-              <h2 id="shelfTitle" class="text-[20px] font-semibold tracking-normal text-neutral-950">全部故事</h2>
-              <span id="shelfHint" class="text-[13px] text-neutral-500">已录音优先</span>
+          <section class="section">
+            <div class="section-head">
+              <h2 class="section-title" id="shelfTitle">全部故事</h2>
+              <span class="section-note" id="shelfHint">已录音优先</span>
             </div>
-            <div id="storyShelf" class="space-y-3 pb-4"></div>
+            <div class="story-list" id="storyShelf"></div>
           </section>
-
         </section>
 
-        <section id="playerView" class="relative hidden h-full overflow-y-auto px-5 pb-8 pt-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <header class="mb-4 flex items-center justify-between">
-            <button id="backHome" class="flex h-10 w-10 items-center justify-center text-neutral-700" aria-label="返回首页">
-              <i data-lucide="chevron-left" class="h-7 w-7 stroke-[1.8]"></i>
-            </button>
-            <p class="text-[13px] font-medium tracking-[.16em] text-neutral-500">STORY PLAYER</p>
-            <button id="topFavoriteButton" class="flex h-10 w-10 items-center justify-center text-neutral-700" aria-label="喜欢">
-              <i data-lucide="heart" class="h-6 w-6 stroke-[1.8]"></i>
-            </button>
+        <section class="view hidden" id="playerView">
+          <header class="player-head">
+            <button class="icon-button" id="backHome" aria-label="返回首页" type="button"></button>
+            <p class="player-title-top">STORY PLAYER</p>
+            <button class="icon-button" id="topFavoriteButton" aria-label="喜欢" type="button"></button>
           </header>
 
-          <article class="overflow-hidden rounded-[32px] border border-white/70 bg-white/75 p-3 shadow-card">
-            <img id="playerImage" class="h-[260px] w-full rounded-[26px] object-cover" alt="" />
-            <div class="px-2 pb-2 pt-5">
-              <p id="playerMeta" class="text-[13px] font-medium text-neutral-500"></p>
-              <h1 id="playerTitle" class="mt-2 text-[28px] font-semibold leading-[1.18] tracking-normal text-neutral-950"></h1>
-              <p id="playerSummary" class="mt-3 text-[15px] leading-6 text-neutral-500"></p>
+          <article class="story-panel">
+            <img class="player-cover" id="playerImage" alt="" />
+            <div class="story-copy">
+              <p class="meta" id="playerMeta"></p>
+              <h1 class="story-name" id="playerTitle"></h1>
+              <p class="summary" id="playerSummary"></p>
             </div>
           </article>
 
-          <section class="mt-5 rounded-[32px] border border-white/80 bg-[#f6f2fb]/80 px-5 py-5 shadow-card">
-            <div class="mb-4 flex items-center justify-between">
+          <section class="audio-panel">
+            <div class="status-row">
               <div>
-                <p class="text-[13px] text-neutral-500">播放状态</p>
-                <p id="playStatus" class="mt-1 text-[16px] font-semibold text-neutral-950">等待录音</p>
+                <p class="status-label">播放状态</p>
+                <p class="status-text" id="playStatus">等待录音</p>
               </div>
-              <div id="audioBadge" class="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">
-                <i data-lucide="mic-2" class="h-6 w-6 stroke-[1.8]"></i>
-              </div>
+              <div class="audio-badge" id="audioBadge"></div>
             </div>
 
-            <div class="mb-2 flex items-center justify-between text-[12px] font-medium text-neutral-500">
+            <div class="time-row">
               <span id="currentTime">0:00</span>
               <span id="durationTime">--:--</span>
             </div>
-            <div class="relative mb-5 h-8">
-              <div class="absolute left-0 right-0 top-1/2 h-2 -translate-y-1/2 overflow-hidden rounded-full bg-neutral-200">
-                <div id="progressBar" class="h-full w-0 rounded-full bg-[#9e8bbe] transition-[width] duration-150"></div>
-              </div>
-              <input
-                id="seekBar"
-                class="absolute inset-x-[-2px] top-1/2 h-8 -translate-y-1/2 cursor-pointer appearance-none bg-transparent disabled:cursor-not-allowed disabled:opacity-50 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[#9e8bbe] [&::-moz-range-thumb]:shadow-[0_4px_12px_rgba(158,139,190,.35)] [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-transparent [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-[-6px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[#9e8bbe] [&::-webkit-slider-thumb]:shadow-[0_4px_12px_rgba(158,139,190,.35)]"
-                type="range"
-                min="0"
-                max="1000"
-                value="0"
-                disabled
-                aria-label="拖动播放进度"
-              />
+            <div class="seek-wrap">
+              <div class="seek-track"><div class="seek-fill" id="progressBar"></div></div>
+              <input class="seek" id="seekBar" type="range" min="0" max="1000" value="0" disabled aria-label="拖动播放进度" />
             </div>
 
-            <div class="flex items-center justify-center gap-6">
-              <button id="restartButton" class="flex h-12 w-12 items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_10px_22px_rgba(158,139,190,.22)] transition active:scale-95" aria-label="回到开头">
-                <i data-lucide="skip-back" class="h-6 w-6 stroke-[1.9]"></i>
+            <div class="controls">
+              <button class="round-control" id="restartButton" aria-label="回到开头" type="button"></button>
+              <button class="play-control" id="playButton" aria-label="播放" type="button">
+                <span id="playIcon"></span>
+                <span class="sr-only" id="playLabel">播放</span>
               </button>
-              <button id="playButton" class="mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_14px_30px_rgba(158,139,190,.30)] transition active:scale-[.96]" aria-label="播放">
-                <i id="playIcon" data-lucide="play" class="h-9 w-9 fill-current stroke-[1.8]"></i>
-                <span id="playLabel" class="sr-only">播放</span>
-              </button>
-              <button id="forwardButton" class="flex h-12 w-12 items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_10px_22px_rgba(158,139,190,.22)] transition active:scale-95" aria-label="快进十五秒">
-                <i data-lucide="skip-forward" class="h-6 w-6 stroke-[1.9]"></i>
-              </button>
+              <button class="round-control" id="forwardButton" aria-label="快进十五秒" type="button"></button>
             </div>
           </section>
-
         </section>
       </section>
     </main>
@@ -186,7 +699,7 @@
           image: "public/assets/story-covers/koala-plane.jpg",
           icon: "plane",
           summary: "考拉卡伊和妹妹沙伦坐大飞机去考拉隆坡看奶奶，机场、安检、登机和飞机餐都变成了一场热闹旅行。",
-          audioSources: ["public/assets/real-audio/koala-plane-dad.mp3?v=20260729-dad1"]
+          audioSources: ["public/assets/real-audio/koala-plane-dad.mp3?v=20260729-fast2"]
         },
         {
           id: "crab-kaka",
@@ -208,7 +721,7 @@
           hasRecording: false,
           minutes: 5,
           image: "public/assets/story-covers/moose-firefighter.jpg",
-          icon: "flame-kindling",
+          icon: "flame",
           summary: "驼鹿在消防站训练、出警、救援，最后用自己的大鹿角救下二十一只小豚鼠，成为真正的消防员。",
           audioSources: []
         },
@@ -234,7 +747,7 @@
           image: "public/assets/story-covers/forest-magic-night.jpg",
           icon: "moon-star",
           summary: "小熊猫乐乐走进夜晚森林，看见萤火虫、发光蘑菇和夜光鹿，发现黑夜也可以很美好。",
-          audioSources: ["public/assets/real-audio/forest-magic-night-recording.mp3?v=20260729-recording1"]
+          audioSources: ["public/assets/real-audio/forest-magic-night-recording.mp3?v=20260729-fast2"]
         },
         {
           id: "hedgehog-soft-hug",
@@ -271,11 +784,12 @@
         { id: "生活习惯", label: "习惯", icon: "leaf" }
       ];
 
+      const FALLBACK_IMAGE = "public/assets/story-covers/forest-magic-night.jpg";
       let currentStory = STORIES[0];
       let selectedCategory = "all";
       let activeAudio = null;
       let isPlaying = false;
-      const FALLBACK_IMAGE = "public/assets/story-covers/forest-magic-night.jpg";
+      let pendingSeekRatio = null;
 
       const homeView = document.getElementById("homeView");
       const playerView = document.getElementById("playerView");
@@ -298,7 +812,51 @@
       const seekBar = document.getElementById("seekBar");
       const currentTime = document.getElementById("currentTime");
       const durationTime = document.getElementById("durationTime");
-      let pendingSeekRatio = null;
+      const favoriteStories = new Set();
+
+      function icon(name, className = "icon") {
+        const paths = {
+          moon: '<path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a7 7 0 1 0 11.5 11.5z"/>',
+          back: '<path d="M15 19 8 12l7-7"/>',
+          heart: '<path d="M20.8 5.6a5.1 5.1 0 0 0-7.2 0L12 7.2l-1.6-1.6a5.1 5.1 0 1 0-7.2 7.2L12 21l8.8-8.2a5.1 5.1 0 0 0 0-7.2z"/>',
+          headphones: '<path d="M4 14a8 8 0 0 1 16 0"/><path d="M4 14v4a2 2 0 0 0 2 2h2v-8H6a2 2 0 0 0-2 2z"/><path d="M20 14v4a2 2 0 0 1-2 2h-2v-8h2a2 2 0 0 1 2 2z"/>',
+          library: '<path d="M4 19V5"/><path d="M9 19V5"/><path d="M14 19V5"/><path d="M19 19V5"/>',
+          rabbit: '<path d="M8 14c-2 0-3.5 1.3-3.5 3s1.5 3 3.5 3h8c2 0 3.5-1.3 3.5-3S18 14 16 14"/><path d="M9 14c-1-4-1-8 1-10 2 2 3 5 2 9"/><path d="M15 14c1-4 1-8-1-10-2 2-3 5-2 9"/><path d="M9 17h.01"/><path d="M15 17h.01"/>',
+          sparkles: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M5 18l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+          "moon-star": '<path d="M17 17a7 7 0 0 1-9.5-9.5 8 8 0 1 0 9.5 9.5z"/><path d="M18 3l.6 1.6L20 5l-1.4.4L18 7l-.6-1.6L16 5l1.4-.4z"/>',
+          plane: '<path d="M21 16 3 21l5-9-5-9 18 5-9 4z"/>',
+          leaf: '<path d="M5 21c8-1 14-7 16-18C12 4 5 9 5 21z"/><path d="M5 21c4-5 8-8 13-10"/>',
+          shell: '<path d="M4 17c0-6 4-10 8-10s8 4 8 10"/><path d="M4 17h16"/><path d="M8 17c0-5 2-9 4-10"/><path d="M16 17c0-5-2-9-4-10"/>',
+          flame: '<path d="M12 22c4 0 7-3 7-7 0-3-2-5-4-7 .2 2-.8 3.2-2 4-1-3-3-5-5-6 .4 4-3 6-3 9 0 4 3 7 7 7z"/>',
+          package: '<path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="M12 12 4 7.5"/><path d="M12 12l8-4.5"/><path d="M12 12v9"/>',
+          playCircle: '<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z" class="fill"/>',
+          play: '<path d="m8 5 11 7-11 7z" class="fill"/>',
+          pause: '<path d="M8 5h3v14H8z" class="fill"/><path d="M14 5h3v14h-3z" class="fill"/>',
+          rotate: '<path d="M4 7v6h6"/><path d="M5.5 13A7 7 0 1 0 8 5.3L4 9"/>',
+          skipBack: '<path d="M19 20 8 12l11-8z" class="fill"/><path d="M5 19V5"/>',
+          skipForward: '<path d="m5 4 11 8-11 8z" class="fill"/><path d="M19 5v14"/>',
+          micOff: '<path d="M9 9v3a3 3 0 0 0 5.1 2.1"/><path d="M15 9V6a3 3 0 0 0-5.1-2.1"/><path d="M5 11a7 7 0 0 0 11 5.7"/><path d="M19 11a7 7 0 0 1-.8 3.2"/><path d="M12 18v3"/><path d="M8 21h8"/><path d="M3 3l18 18"/>'
+        };
+        return `<svg class="${className}" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.library}</svg>`;
+      }
+
+      function setStaticIcons() {
+        document.querySelectorAll("[data-static-icon]").forEach((node) => {
+          node.innerHTML = icon(node.dataset.staticIcon);
+        });
+        document.getElementById("backHome").innerHTML = icon("back");
+        document.getElementById("restartButton").innerHTML = icon("skipBack");
+        document.getElementById("forwardButton").innerHTML = icon("skipForward");
+      }
+
+      function updateFavoriteButton() {
+        const button = document.getElementById("topFavoriteButton");
+        const isFavorite = favoriteStories.has(currentStory.id);
+        button.classList.toggle("is-favorite", isFavorite);
+        button.setAttribute("aria-pressed", String(isFavorite));
+        button.setAttribute("aria-label", isFavorite ? "取消喜欢" : "喜欢");
+        button.innerHTML = icon("heart");
+      }
 
       function formatTime(seconds) {
         if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
@@ -307,9 +865,7 @@
       }
 
       function setPlayIcon(name) {
-        playIcon.setAttribute("data-lucide", name);
-        playIcon.classList.toggle("fill-current", name === "play");
-        lucide.createIcons();
+        playIcon.innerHTML = icon(name);
       }
 
       function updateProgress(current, duration) {
@@ -317,7 +873,7 @@
         progressBar.style.width = `${ratio * 100}%`;
         seekBar.value = String(Math.round(ratio * 1000));
         currentTime.textContent = formatTime(current);
-        durationTime.textContent = duration ? formatTime(duration) : durationTime.textContent;
+        if (duration) durationTime.textContent = formatTime(duration);
       }
 
       function wireAudioEvents(audio) {
@@ -329,14 +885,17 @@
           }
           updateProgress(audio.currentTime, audio.duration);
         };
-        audio.ontimeupdate = () => {
-          updateProgress(audio.currentTime, audio.duration);
-        };
+        audio.ontimeupdate = () => updateProgress(audio.currentTime, audio.duration);
         audio.onended = () => {
           isPlaying = false;
           playStatus.textContent = "故事讲完了";
           playLabel.textContent = "重播";
-          setPlayIcon("rotate-ccw");
+          setPlayIcon("rotate");
+        };
+        audio.onerror = () => {
+          isPlaying = false;
+          playStatus.textContent = "录音加载失败";
+          setPlayIcon("play");
         };
       }
 
@@ -356,83 +915,53 @@
         playLabel.textContent = hasAudio ? "播放" : "待录音";
         playButton.disabled = !hasAudio;
         seekBar.disabled = !hasAudio;
-        playButton.className = hasAudio
-          ? "mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[#9e8bbe] text-white shadow-[0_14px_30px_rgba(158,139,190,.30)] transition active:scale-[.96]"
-          : "mx-auto flex h-[72px] w-[72px] items-center justify-center rounded-full bg-neutral-300 text-white shadow-card";
-        audioBadge.innerHTML = hasAudio
-          ? '<i data-lucide="headphones" class="h-6 w-6 stroke-[1.8]"></i>'
-          : '<i data-lucide="mic-2" class="h-6 w-6 stroke-[1.8]"></i>';
-        audioBadge.className = hasAudio
-          ? "flex h-11 w-11 items-center justify-center rounded-full bg-[#9e8bbe]/20 text-neutral-600"
-          : "flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-neutral-500";
+        document.getElementById("restartButton").disabled = !hasAudio;
+        document.getElementById("forwardButton").disabled = !hasAudio;
+        audioBadge.innerHTML = icon(hasAudio ? "headphones" : "micOff");
         currentTime.textContent = "0:00";
         durationTime.textContent = hasAudio ? `${currentStory.minutes}:00` : "--:--";
         progressBar.style.width = "0%";
         seekBar.value = "0";
         pendingSeekRatio = null;
-        setPlayIcon(hasAudio ? "play" : "mic-off");
+        setPlayIcon(hasAudio ? "play" : "micOff");
       }
 
       function getVisibleStories() {
-        const visible = STORIES.filter((story) => {
-          if (selectedCategory === "all") return true;
-          if (selectedCategory === "recorded") return story.hasRecording;
-          return story.category === selectedCategory;
-        });
+        const visible = STORIES.filter((story) => selectedCategory === "all" || story.category === selectedCategory);
         return visible.sort((a, b) => {
           if (a.hasRecording !== b.hasRecording) return a.hasRecording ? -1 : 1;
           return STORIES.indexOf(a) - STORIES.indexOf(b);
         });
       }
 
-      function updateShelfHeader(visibleStories) {
-        const category = CATEGORIES.find((item) => item.id === selectedCategory);
-        const recorded = visibleStories.filter((story) => story.hasRecording).length;
-        shelfTitle.textContent = category ? category.label : "全部故事";
-        shelfHint.textContent = `${visibleStories.length} 个故事 · ${recorded} 个可听`;
-        recordingCount.textContent = `${STORIES.filter((story) => story.hasRecording).length} 个`;
-      }
-
       function renderRecordedShelf() {
         recordedShelf.innerHTML = "";
         STORIES.filter((story) => story.hasRecording).forEach((story) => {
           const card = document.createElement("button");
-          card.className =
-            "group overflow-hidden rounded-[24px] border border-white/90 bg-white/68 p-2 text-left shadow-card backdrop-blur-sm transition active:scale-[.98]";
+          card.className = "recorded-card";
+          card.type = "button";
           card.innerHTML = `
-            <img class="h-[92px] w-full rounded-[19px] object-cover" src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
-            <span class="mt-2 flex items-center justify-between gap-2 px-1">
-              <strong class="line-clamp-2 text-[15px] font-semibold leading-[1.2] text-neutral-950">${story.title}</strong>
-              <i data-lucide="play-circle" class="h-6 w-6 shrink-0 text-[#9e8bbe] stroke-[1.8]"></i>
+            <img src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <span class="mini-play">
+              <strong>${story.title}</strong>
+              ${icon("playCircle")}
             </span>
           `;
           card.addEventListener("click", () => openPlayer(story));
           recordedShelf.appendChild(card);
         });
-        lucide.createIcons();
       }
 
       function renderCategoryShelf() {
         categoryShelf.innerHTML = "";
         CATEGORIES.forEach((category) => {
-          const count = category.id === "recorded"
-            ? STORIES.filter((story) => story.hasRecording).length
-            : category.id === "all"
-              ? STORIES.length
-              : STORIES.filter((story) => story.category === category.id).length;
-          const isActive = selectedCategory === category.id;
+          const active = selectedCategory === category.id;
           const card = document.createElement("button");
-          card.className = isActive
-            ? "flex h-[84px] flex-col items-center justify-center rounded-[24px] border border-[#9e8bbe]/45 bg-[#9e8bbe]/18 text-center shadow-card transition active:scale-[.98]"
-            : "flex h-[84px] flex-col items-center justify-center rounded-[24px] border border-white/90 bg-white/62 text-center shadow-card backdrop-blur-sm transition active:scale-[.98]";
+          card.className = `category-card${active ? " active" : ""}`;
+          card.type = "button";
           card.innerHTML = `
-            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${isActive ? "bg-[#9e8bbe] text-white" : "bg-white/80 text-neutral-500"}">
-              <i data-lucide="${category.icon}" class="h-6 w-6 stroke-[1.8]"></i>
-            </span>
-            <span class="mt-2 min-w-0">
-              <strong class="block whitespace-nowrap text-[14px] font-semibold text-neutral-950">${category.label}</strong>
-              <span class="sr-only">${count} 个故事</span>
-            </span>
+            <span class="category-icon">${icon(category.icon)}</span>
+            <span class="category-label">${category.label}</span>
           `;
           card.addEventListener("click", () => {
             selectedCategory = category.id;
@@ -440,33 +969,32 @@
           });
           categoryShelf.appendChild(card);
         });
-        lucide.createIcons();
       }
 
       function renderStoryShelf() {
         storyShelf.innerHTML = "";
         const visibleStories = getVisibleStories();
-        updateShelfHeader(visibleStories);
-        if (!visibleStories.length) {
-          storyShelf.innerHTML = '<div class="rounded-[26px] border border-white/90 bg-white/62 p-5 text-[14px] leading-6 text-neutral-500 shadow-card">这个分类还没有故事，后面放进来会自动出现在这里。</div>';
-          return;
-        }
+        const category = CATEGORIES.find((item) => item.id === selectedCategory);
+        const recorded = visibleStories.filter((story) => story.hasRecording).length;
+        shelfTitle.textContent = category ? category.label : "全部故事";
+        shelfHint.textContent = `${visibleStories.length} 个故事 · ${recorded} 个可听`;
+        recordingCount.textContent = `${STORIES.filter((story) => story.hasRecording).length} 个`;
+
         visibleStories.forEach((story) => {
           const card = document.createElement("button");
-          card.className =
-            "group grid w-full grid-cols-[78px_1fr_28px] items-center gap-4 rounded-[26px] border border-white/90 bg-white/64 p-3 text-left shadow-card backdrop-blur-sm transition duration-200 active:scale-[.985]";
+          card.className = "story-card";
+          card.type = "button";
           card.innerHTML = `
-            <img class="h-[78px] w-[78px] rounded-[20px] object-cover" src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
-            <span class="min-w-0">
-              <span class="block text-[12px] font-medium text-neutral-500">${story.category} · ${story.minutes} 分钟${story.hasRecording ? " · 可听" : ""}</span>
-              <strong class="mt-1 block text-[19px] font-semibold leading-[1.22] tracking-normal text-neutral-950">${story.title}</strong>
+            <img src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <span>
+              <small>${story.category} · ${story.minutes} 分钟${story.hasRecording ? " · 可听" : ""}</small>
+              <strong>${story.title}</strong>
             </span>
-            <i data-lucide="${story.hasRecording ? "headphones" : story.icon}" class="h-6 w-6 text-neutral-500 stroke-[1.8]"></i>
+            ${icon(story.hasRecording ? "headphones" : story.icon)}
           `;
           card.addEventListener("click", () => openPlayer(story));
           storyShelf.appendChild(card);
         });
-        lucide.createIcons();
       }
 
       function renderHome() {
@@ -487,8 +1015,10 @@
         playerTitle.textContent = story.title;
         playerSummary.textContent = story.summary;
         setPlayerReadyState();
+        updateFavoriteButton();
         homeView.classList.add("hidden");
         playerView.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "instant" });
       }
 
       function stopAudio() {
@@ -499,21 +1029,22 @@
         }
         isPlaying = false;
         const hasAudio = currentStory.hasRecording && currentStory.audioSources.length;
-        setPlayIcon(hasAudio ? "play" : "mic-off");
-        if (playLabel) playLabel.textContent = hasAudio ? "播放" : "待录音";
+        setPlayIcon(hasAudio ? "play" : "micOff");
+        playLabel.textContent = hasAudio ? "播放" : "待录音";
       }
 
-      function playCurrentStory() {
+      async function playCurrentStory() {
         if (!currentStory.hasRecording || !currentStory.audioSources.length) {
-          playStatus.textContent = "录音接入后就能播放";
+          playStatus.textContent = "等待录音";
           progressBar.style.width = "0%";
           return;
         }
 
-        ensureAudio();
+        const audio = ensureAudio();
+        if (!audio) return;
 
-        if (activeAudio && isPlaying) {
-          activeAudio.pause();
+        if (isPlaying) {
+          audio.pause();
           isPlaying = false;
           playStatus.textContent = "已暂停";
           playLabel.textContent = "继续";
@@ -521,53 +1052,62 @@
           return;
         }
 
-        if (activeAudio && !isPlaying) {
-          activeAudio.play();
+        try {
+          await audio.play();
           isPlaying = true;
           playStatus.textContent = "正在播放";
           playLabel.textContent = "暂停";
           setPlayIcon("pause");
-          return;
+        } catch (error) {
+          isPlaying = false;
+          playStatus.textContent = "再点一次播放";
+          setPlayIcon("play");
         }
-
-        activeAudio.play();
-        isPlaying = true;
-        playStatus.textContent = "正在播放";
-        playLabel.textContent = "暂停";
-        setPlayIcon("pause");
       }
 
       document.getElementById("backHome").addEventListener("click", () => {
         stopAudio();
         playerView.classList.add("hidden");
         homeView.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "instant" });
       });
 
       document.getElementById("restartButton").addEventListener("click", () => {
-        if (!activeAudio) {
+        const audio = ensureAudio();
+        if (!audio) {
           playCurrentStory();
           return;
         }
-        activeAudio.currentTime = 0;
+        audio.currentTime = 0;
+        updateProgress(audio.currentTime, audio.duration);
         if (!isPlaying) playCurrentStory();
       });
 
-      playButton.addEventListener("click", playCurrentStory);
-      document.getElementById("topFavoriteButton").addEventListener("click", () => {
-        playStatus.textContent = "已加入六六喜欢";
-      });
       document.getElementById("forwardButton").addEventListener("click", () => {
         const audio = ensureAudio();
         if (!audio || !Number.isFinite(audio.duration)) return;
         audio.currentTime = Math.min(audio.currentTime + 15, audio.duration);
         updateProgress(audio.currentTime, audio.duration);
       });
+
+      document.getElementById("topFavoriteButton").addEventListener("click", () => {
+        if (favoriteStories.has(currentStory.id)) {
+          favoriteStories.delete(currentStory.id);
+        } else {
+          favoriteStories.add(currentStory.id);
+        }
+        updateFavoriteButton();
+      });
+
+      playButton.addEventListener("click", playCurrentStory);
+
       seekBar.addEventListener("input", () => {
         const ratio = Number(seekBar.value) / 1000;
         progressBar.style.width = `${ratio * 100}%`;
         const duration = activeAudio && Number.isFinite(activeAudio.duration) ? activeAudio.duration : currentStory.minutes * 60;
         currentTime.textContent = formatTime(ratio * duration);
       });
+
       seekBar.addEventListener("change", () => {
         const audio = ensureAudio();
         const ratio = Number(seekBar.value) / 1000;
@@ -580,8 +1120,8 @@
         }
       });
 
+      setStaticIcons();
       renderHome();
-      lucide.createIcons();
     </script>
   </body>
 </html>
