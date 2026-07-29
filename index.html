@@ -7,6 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="六六睡前故事" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@198c631/public/assets/story-covers-lite/thumbs/koala-plane.jpg" />
+    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@198c631/public/assets/story-covers-lite/thumbs/forest-magic-night.jpg" />
     <title>六六睡前故事</title>
     <style>
       :root {
@@ -651,7 +653,7 @@
           </header>
 
           <article class="story-panel">
-            <img class="player-cover" id="playerImage" alt="" />
+            <img class="player-cover" id="playerImage" alt="" width="640" height="640" decoding="async" />
             <div class="story-copy">
               <p class="meta" id="playerMeta"></p>
               <h1 class="story-name" id="playerTitle"></h1>
@@ -691,6 +693,10 @@
     </main>
 
     <script>
+      const IMAGE_CDN_BASE = "https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@198c631/public/assets/story-covers-lite";
+      const coverImage = (fileName) => `${IMAGE_CDN_BASE}/covers/${fileName}`;
+      const thumbImage = (fileName) => `${IMAGE_CDN_BASE}/thumbs/${fileName}`;
+
       const STORIES = [
         {
           id: "koala-plane",
@@ -699,7 +705,8 @@
           category: "交通旅行",
           hasRecording: true,
           minutes: 8,
-          image: "public/assets/story-covers/koala-plane.jpg",
+          image: coverImage("koala-plane.jpg"),
+          thumb: thumbImage("koala-plane.jpg"),
           icon: "plane",
           summary: "考拉卡伊和妹妹沙伦坐大飞机去考拉隆坡看奶奶，机场、安检、登机和飞机餐都变成了一场热闹旅行。",
           audioSources: ["https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@86e43fc/public/assets/real-audio-lite/koala-plane-lite.mp3"]
@@ -711,7 +718,8 @@
           category: "动物朋友",
           hasRecording: false,
           minutes: 5,
-          image: "public/assets/story-covers/crab-kaka.jpg",
+          image: coverImage("crab-kaka.jpg"),
+          thumb: thumbImage("crab-kaka.jpg"),
           icon: "shell",
           summary: "小螃蟹咔咔想把彩虹贝壳送给妈妈，遇到沙坑、海藻和黑夜，最后学会勇敢往前走一小步。",
           audioSources: []
@@ -723,7 +731,8 @@
           category: "交通旅行",
           hasRecording: false,
           minutes: 5,
-          image: "public/assets/story-covers/moose-firefighter.jpg",
+          image: coverImage("moose-firefighter.jpg"),
+          thumb: thumbImage("moose-firefighter.jpg"),
           icon: "flame",
           summary: "驼鹿在消防站训练、出警、救援，最后用自己的大鹿角救下二十一只小豚鼠，成为真正的消防员。",
           audioSources: []
@@ -735,7 +744,8 @@
           category: "勇敢冒险",
           hasRecording: false,
           minutes: 5,
-          image: "public/assets/story-covers/magic-pocket-courage.jpg",
+          image: coverImage("magic-pocket-courage.jpg"),
+          thumb: thumbImage("magic-pocket-courage.jpg"),
           icon: "sparkles",
           summary: "小兔波波用星星口袋收集勇气，从害怕黑影到陪朋友走进草丛，一步一步变成小勇士。",
           audioSources: []
@@ -747,7 +757,8 @@
           category: "睡前安抚",
           hasRecording: true,
           minutes: 4,
-          image: "public/assets/story-covers/forest-magic-night.jpg",
+          image: coverImage("forest-magic-night.jpg"),
+          thumb: thumbImage("forest-magic-night.jpg"),
           icon: "moon-star",
           summary: "小熊猫乐乐走进夜晚森林，看见萤火虫、发光蘑菇和夜光鹿，发现黑夜也可以很美好。",
           audioSources: ["https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@86e43fc/public/assets/real-audio-lite/forest-magic-night-lite.mp3"]
@@ -759,7 +770,8 @@
           category: "动物朋友",
           hasRecording: false,
           minutes: 4,
-          image: "public/assets/story-covers/hedgehog-soft-hug.jpg",
+          image: coverImage("hedgehog-soft-hug.jpg"),
+          thumb: thumbImage("hedgehog-soft-hug.jpg"),
           icon: "heart",
           summary: "小刺猬团团因为背上的刺不能拥抱朋友而难过，后来发现自己的特别之处也能保护朋友。",
           audioSources: []
@@ -771,7 +783,8 @@
           category: "生活习惯",
           hasRecording: false,
           minutes: 4,
-          image: "public/assets/story-covers/snail-slow-delivery.jpg",
+          image: coverImage("snail-slow-delivery.jpg"),
+          thumb: thumbImage("snail-slow-delivery.jpg"),
           icon: "package",
           summary: "小蜗牛慢慢送快递虽然很慢，却把一路上的花香、鸟鸣和阳光都带给了大家。",
           audioSources: []
@@ -787,7 +800,7 @@
         { id: "生活习惯", label: "习惯", icon: "leaf" }
       ];
 
-      const FALLBACK_IMAGE = "public/assets/story-covers/forest-magic-night.jpg";
+      const FALLBACK_IMAGE = "public/assets/story-covers-lite/covers/forest-magic-night.jpg";
       let currentStory = STORIES[0];
       let selectedCategory = "all";
       let activeAudio = null;
@@ -944,7 +957,7 @@
           card.className = "recorded-card";
           card.type = "button";
           card.innerHTML = `
-            <img src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <img src="${story.thumb}" alt="" width="160" height="160" decoding="async" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
             <span class="mini-play">
               <strong>${story.title}</strong>
               ${icon("playCircle")}
@@ -988,7 +1001,7 @@
           card.className = "story-card";
           card.type = "button";
           card.innerHTML = `
-            <img src="${story.image}" alt="" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <img src="${story.thumb}" alt="" width="160" height="160" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
             <span>
               <small>${story.category} · ${story.minutes} 分钟${story.hasRecording ? " · 可听" : ""}</small>
               <strong>${story.title}</strong>
@@ -1013,6 +1026,7 @@
           playerImage.onerror = null;
           playerImage.src = FALLBACK_IMAGE;
         };
+        playerImage.removeAttribute("src");
         playerImage.src = story.image;
         playerMeta.textContent = `${story.tag} · ${story.minutes} 分钟`;
         playerTitle.textContent = story.title;
