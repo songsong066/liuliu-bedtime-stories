@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#f6f2ea" />
     <title>六六睡前故事</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,9 +22,43 @@
         }
       };
     </script>
+    <style>
+      @media (max-width: 480px) {
+        body {
+          background: #fbfaf7;
+        }
+
+        main {
+          display: block;
+          min-height: 100dvh;
+        }
+
+        #phoneFrame {
+          width: 100vw;
+          min-height: 100dvh;
+          height: auto;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+          overflow: visible;
+        }
+
+        #homeView,
+        #playerView {
+          min-height: 100dvh;
+          height: auto;
+          overflow-y: visible;
+          padding-bottom: calc(28px + env(safe-area-inset-bottom));
+        }
+
+        #playerImage {
+          height: 232px;
+        }
+      }
+    </style>
   </head>
-  <body class="min-h-screen overflow-hidden bg-[#ede8df] font-sans text-neutral-950 antialiased">
-    <main class="mx-auto my-0 grid h-screen place-items-center">
+  <body class="min-h-screen overflow-x-hidden bg-[#ede8df] font-sans text-neutral-950 antialiased">
+    <main class="mx-auto my-0 grid min-h-screen place-items-center">
       <section
         id="phoneFrame"
         class="relative h-[812px] w-[375px] overflow-hidden rounded-[34px] border border-neutral-300 bg-[#fbfaf7] shadow-soft"
@@ -71,7 +105,7 @@
 
         </section>
 
-        <section id="playerView" class="relative hidden h-full overflow-hidden px-5 pb-5 pt-6">
+        <section id="playerView" class="relative hidden h-full overflow-y-auto px-5 pb-8 pt-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <header class="mb-4 flex items-center justify-between">
             <button id="backHome" class="flex h-10 w-10 items-center justify-center text-neutral-700" aria-label="返回首页">
               <i data-lucide="chevron-left" class="h-7 w-7 stroke-[1.8]"></i>
