@@ -267,18 +267,20 @@
 
       .category-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 16px;
       }
 
       .category-card {
         display: flex;
-        height: 80px;
+        height: 104px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 8px;
         border-radius: 24px;
         text-align: center;
+        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
       }
 
       .category-card.active {
@@ -290,22 +292,24 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.78);
-        color: #656565;
+        width: 56px;
+        height: 56px;
+        color: #5f5f5f;
       }
 
       .category-card.active .category-icon {
-        background: var(--accent);
-        color: white;
+        color: var(--accent);
+      }
+
+      .category-icon .icon {
+        width: 42px;
+        height: 42px;
+        stroke-width: 1.8;
       }
 
       .category-label {
-        margin-top: 7px;
         color: var(--text);
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 700;
         white-space: nowrap;
       }
@@ -727,6 +731,7 @@
           image: coverImage("koala-plane.jpg"),
           thumb: thumbImage("koala-plane.jpg"),
           icon: "plane",
+          groups: ["travel"],
           summary: "考拉卡伊和妹妹沙伦坐大飞机去考拉隆坡看奶奶，机场、安检、登机和飞机餐都变成了一场热闹旅行。",
           audioSources: ["https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@86e43fc/public/assets/real-audio-lite/koala-plane-lite.mp3"]
         },
@@ -740,6 +745,7 @@
           image: coverImage("crab-kaka.jpg"),
           thumb: thumbImage("crab-kaka.jpg"),
           icon: "shell",
+          groups: ["animal", "adventure"],
           summary: "小螃蟹咔咔想把彩虹贝壳送给妈妈，遇到沙坑、海藻和黑夜，最后学会勇敢往前走一小步。",
           audioSources: []
         },
@@ -753,6 +759,7 @@
           image: coverImage("moose-firefighter.jpg"),
           thumb: thumbImage("moose-firefighter.jpg"),
           icon: "flame",
+          groups: ["adventure", "travel"],
           summary: "驼鹿在消防站训练、出警、救援，最后用自己的大鹿角救下二十一只小豚鼠，成为真正的消防员。",
           audioSources: []
         },
@@ -766,6 +773,7 @@
           image: coverImage("magic-pocket-courage.jpg"),
           thumb: thumbImage("magic-pocket-courage.jpg"),
           icon: "sparkles",
+          groups: ["adventure"],
           summary: "小兔波波用星星口袋收集勇气，从害怕黑影到陪朋友走进草丛，一步一步变成小勇士。",
           audioSources: []
         },
@@ -779,6 +787,7 @@
           image: coverImage("forest-magic-night.jpg"),
           thumb: thumbImage("forest-magic-night.jpg"),
           icon: "moon-star",
+          groups: ["animal", "bedtime", "adventure"],
           summary: "小熊猫乐乐走进夜晚森林，看见萤火虫、发光蘑菇和夜光鹿，发现黑夜也可以很美好。",
           audioSources: ["https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@86e43fc/public/assets/real-audio-lite/forest-magic-night-lite.mp3"]
         },
@@ -792,6 +801,7 @@
           image: coverImage("hedgehog-soft-hug.jpg"),
           thumb: thumbImage("hedgehog-soft-hug.jpg"),
           icon: "heart",
+          groups: ["animal", "bedtime"],
           summary: "小刺猬团团因为背上的刺不能拥抱朋友而难过，后来发现自己的特别之处也能保护朋友。",
           audioSources: []
         },
@@ -805,18 +815,17 @@
           image: coverImage("snail-slow-delivery.jpg"),
           thumb: thumbImage("snail-slow-delivery.jpg"),
           icon: "package",
+          groups: ["animal", "travel"],
           summary: "小蜗牛慢慢送快递虽然很慢，却把一路上的花香、鸟鸣和阳光都带给了大家。",
           audioSources: []
         }
       ];
 
       const CATEGORIES = [
-        { id: "all", label: "全部", icon: "library" },
-        { id: "动物朋友", label: "动物", icon: "rabbit" },
-        { id: "勇敢冒险", label: "冒险", icon: "sparkles" },
-        { id: "睡前安抚", label: "晚安", icon: "moon-star" },
-        { id: "交通旅行", label: "出行", icon: "plane" },
-        { id: "生活习惯", label: "习惯", icon: "leaf" }
+        { id: "animal", label: "动物", icon: "paw" },
+        { id: "adventure", label: "冒险", icon: "rocket" },
+        { id: "bedtime", label: "晚安", icon: "moon-cloud" },
+        { id: "travel", label: "出门", icon: "suitcase" }
       ];
 
       const FALLBACK_IMAGE = "public/assets/story-covers-lite/covers/forest-magic-night.jpg";
@@ -864,6 +873,10 @@
           shell: '<path d="M4 17c0-6 4-10 8-10s8 4 8 10"/><path d="M4 17h16"/><path d="M8 17c0-5 2-9 4-10"/><path d="M16 17c0-5-2-9-4-10"/>',
           flame: '<path d="M12 22c4 0 7-3 7-7 0-3-2-5-4-7 .2 2-.8 3.2-2 4-1-3-3-5-5-6 .4 4-3 6-3 9 0 4 3 7 7 7z"/>',
           package: '<path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="M12 12 4 7.5"/><path d="M12 12l8-4.5"/><path d="M12 12v9"/>',
+          paw: '<circle cx="6.8" cy="8" r="2.2"/><circle cx="12" cy="6.6" r="2.4"/><circle cx="17.2" cy="8" r="2.2"/><circle cx="8.8" cy="13.1" r="2.1"/><circle cx="15.2" cy="13.1" r="2.1"/><path d="M7.5 18.5c1.5-3 3-4.2 4.5-4.2s3 1.2 4.5 4.2c.6 1.2-.3 2.5-1.7 2.5H9.2c-1.4 0-2.3-1.3-1.7-2.5z"/>',
+          rocket: '<path d="M13.5 4.5c2.6-1.2 5.1-.9 6-.3.6 1 .9 3.4-.3 6L13 16.4l-5.4-5.4z"/><path d="M8 16l-2.8 2.8"/><path d="M11 19l-2 2"/><path d="M5 13l-2 2"/><circle cx="15.8" cy="7.9" r="1.7"/>',
+          "moon-cloud": '<path d="M17 16.5A7 7 0 0 1 8.3 7.8 7.5 7.5 0 1 0 17 16.5z"/><path d="M8 18h7a3 3 0 0 0 0-6 4.5 4.5 0 0 0-8.4 1.8A2.6 2.6 0 0 0 8 18z"/>',
+          suitcase: '<rect x="5" y="7" width="14" height="12" rx="3"/><path d="M9 7V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8V7"/><path d="M9 12h6"/><path d="M8 19v1"/><path d="M16 19v1"/>',
           playCircle: '<circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z" class="fill"/>',
           play: '<path d="M8.8 6.8c0-1.1 1.2-1.8 2.2-1.2l8 5.2c.9.6.9 1.9 0 2.4l-8 5.2c-1 .6-2.2-.1-2.2-1.2z" class="fill"/>',
           pause: '<rect x="7.5" y="5" width="3.6" height="14" rx="1.4" class="fill"/><rect x="12.9" y="5" width="3.6" height="14" rx="1.4" class="fill"/>',
@@ -962,7 +975,7 @@
       }
 
       function getVisibleStories() {
-        const visible = STORIES.filter((story) => selectedCategory === "all" || story.category === selectedCategory);
+        const visible = STORIES.filter((story) => selectedCategory === "all" || story.groups.includes(selectedCategory));
         return visible.sort((a, b) => {
           if (a.hasRecording !== b.hasRecording) return a.hasRecording ? -1 : 1;
           return STORIES.indexOf(a) - STORIES.indexOf(b);
@@ -996,12 +1009,13 @@
           const card = document.createElement("button");
           card.className = `category-card${active ? " active" : ""}`;
           card.type = "button";
+          card.setAttribute("aria-pressed", String(active));
           card.innerHTML = `
             <span class="category-icon">${icon(category.icon)}</span>
             <span class="category-label">${category.label}</span>
           `;
           card.addEventListener("click", () => {
-            selectedCategory = category.id;
+            selectedCategory = active ? "all" : category.id;
             renderHome();
           });
           categoryShelf.appendChild(card);
