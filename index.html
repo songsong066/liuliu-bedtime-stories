@@ -283,6 +283,15 @@
         transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
       }
 
+      .category-card.overview {
+        grid-column: 1 / -1;
+        height: 88px;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 16px;
+        padding: 0 24px;
+      }
+
       .category-card.active {
         border-color: rgba(158, 139, 190, 0.45);
         background: var(--accent-soft);
@@ -822,6 +831,7 @@
       ];
 
       const CATEGORIES = [
+        { id: "all", label: "全部", icon: "book-open", wide: true },
         { id: "animal", label: "动物", icon: "paw" },
         { id: "adventure", label: "冒险", icon: "rocket" },
         { id: "bedtime", label: "晚安", icon: "moon-cloud" },
@@ -870,6 +880,7 @@
           "moon-star": '<path d="M17 17a7 7 0 0 1-9.5-9.5 8 8 0 1 0 9.5 9.5z"/><path d="M18 3l.6 1.6L20 5l-1.4.4L18 7l-.6-1.6L16 5l1.4-.4z"/>',
           plane: '<path d="M21 16 3 21l5-9-5-9 18 5-9 4z"/>',
           leaf: '<path d="M5 21c8-1 14-7 16-18C12 4 5 9 5 21z"/><path d="M5 21c4-5 8-8 13-10"/>',
+          "book-open": '<path d="M4 5.5A3.5 3.5 0 0 1 7.5 4H11v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M20 5.5A3.5 3.5 0 0 0 16.5 4H13v16h3.5a3.5 3.5 0 0 1 3.5 1.5z"/><path d="M7 8h2"/><path d="M15 8h2"/><path d="M7 12h2"/><path d="M15 12h2"/>',
           shell: '<path d="M4 17c0-6 4-10 8-10s8 4 8 10"/><path d="M4 17h16"/><path d="M8 17c0-5 2-9 4-10"/><path d="M16 17c0-5-2-9-4-10"/>',
           flame: '<path d="M12 22c4 0 7-3 7-7 0-3-2-5-4-7 .2 2-.8 3.2-2 4-1-3-3-5-5-6 .4 4-3 6-3 9 0 4 3 7 7 7z"/>',
           package: '<path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="M12 12 4 7.5"/><path d="M12 12l8-4.5"/><path d="M12 12v9"/>',
@@ -1007,7 +1018,7 @@
         CATEGORIES.forEach((category) => {
           const active = selectedCategory === category.id;
           const card = document.createElement("button");
-          card.className = `category-card${active ? " active" : ""}`;
+          card.className = `category-card${category.wide ? " overview" : ""}${active ? " active" : ""}`;
           card.type = "button";
           card.setAttribute("aria-pressed", String(active));
           card.innerHTML = `
@@ -1027,7 +1038,7 @@
         const visibleStories = getVisibleStories();
         const category = CATEGORIES.find((item) => item.id === selectedCategory);
         const recorded = visibleStories.filter((story) => story.hasRecording).length;
-        shelfTitle.textContent = category ? category.label : "全部故事";
+        shelfTitle.textContent = selectedCategory === "all" ? "全部故事" : category.label;
         shelfHint.textContent = `${visibleStories.length} 个故事 · ${recorded} 个可听`;
         recordingCount.textContent = `${STORIES.filter((story) => story.hasRecording).length} 个`;
 
