@@ -201,6 +201,7 @@
       }
 
       .recorded-card {
+        position: relative;
         overflow: hidden;
         border-radius: 24px;
         padding: 8px;
@@ -216,7 +217,13 @@
         transform: scale(0.97);
       }
 
+      .recorded-cover {
+        position: relative;
+        display: block;
+      }
+
       .recorded-card img {
+        display: block;
         width: 100%;
         height: 88px;
         border-radius: 16px;
@@ -234,15 +241,28 @@
       }
 
       .recorded-card .mini-play {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
+        display: block;
       }
 
-      .recorded-card .mini-play .icon {
-        flex: 0 0 auto;
-        color: var(--accent);
+      .recorded-card .recorded-play {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        color: white;
+        background: rgba(160, 137, 201, 0.92);
+        box-shadow: 0 8px 18px rgba(112, 94, 155, 0.24);
+        backdrop-filter: blur(6px);
+      }
+
+      .recorded-card .recorded-play .icon {
+        width: 18px;
+        height: 18px;
       }
 
       .category-grid {
@@ -631,7 +651,6 @@
           <section class="section">
             <div class="section-head">
               <h2 class="section-title">找故事</h2>
-              <span class="section-note">点图标</span>
             </div>
             <div class="category-grid" id="categoryShelf"></div>
           </section>
@@ -957,10 +976,12 @@
           card.className = "recorded-card";
           card.type = "button";
           card.innerHTML = `
-            <img src="${story.thumb}" alt="" width="160" height="160" decoding="async" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+            <span class="recorded-cover">
+              <img src="${story.thumb}" alt="" width="160" height="160" decoding="async" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'" />
+              <span class="recorded-play" aria-hidden="true">${icon("play")}</span>
+            </span>
             <span class="mini-play">
               <strong>${story.title}</strong>
-              ${icon("playCircle")}
             </span>
           `;
           card.addEventListener("click", () => openPlayer(story));
