@@ -6,9 +6,8 @@
     <meta name="theme-color" content="#fbfaf7" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="六六睡前故事" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@198c631/public/assets/story-covers-lite/thumbs/koala-plane.jpg" />
-    <link rel="preload" as="image" href="https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@198c631/public/assets/story-covers-lite/thumbs/forest-magic-night.jpg" />
+    <link rel="preload" as="image" href="public/assets/story-covers-lite/thumbs/koala-plane.jpg" />
+    <link rel="preload" as="image" href="public/assets/story-covers-lite/thumbs/forest-magic-night.jpg" />
     <title>六六睡前故事</title>
     <style>
       :root {
@@ -725,7 +724,7 @@
     </main>
 
     <script>
-      const IMAGE_CDN_BASE = "https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@198c631/public/assets/story-covers-lite";
+      const IMAGE_CDN_BASE = "public/assets/story-covers-lite";
       const coverImage = (fileName) => `${IMAGE_CDN_BASE}/covers/${fileName}`;
       const thumbImage = (fileName) => `${IMAGE_CDN_BASE}/thumbs/${fileName}`;
 
@@ -742,7 +741,7 @@
           icon: "plane",
           groups: ["discovery"],
           summary: "考拉卡伊和妹妹沙伦坐大飞机去考拉隆坡看奶奶，机场、安检、登机和飞机餐都变成了一场热闹旅行。",
-          audioSources: ["https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@86e43fc/public/assets/real-audio-lite/koala-plane-lite.mp3"]
+          audioSources: ["public/assets/real-audio-lite/koala-plane-lite.mp3"]
         },
         {
           id: "crab-kaka",
@@ -763,28 +762,28 @@
           title: "驼鹿消防员的一天",
           tag: "消防员",
           category: "世界发现",
-          hasRecording: false,
+          hasRecording: true,
           minutes: 5,
           image: coverImage("moose-firefighter.jpg"),
           thumb: thumbImage("moose-firefighter.jpg"),
           icon: "flame",
           groups: ["adventure", "discovery"],
           summary: "驼鹿在消防站训练、出警、救援，最后用自己的大鹿角救下二十一只小豚鼠，成为真正的消防员。",
-          audioSources: []
+          audioSources: ["public/assets/real-audio-lite/moose-firefighter-lite.mp3"]
         },
         {
           id: "magic-pocket-courage",
           title: "神奇口袋里的勇气",
           tag: "勇气",
           category: "勇敢冒险",
-          hasRecording: false,
+          hasRecording: true,
           minutes: 5,
           image: coverImage("magic-pocket-courage.jpg"),
           thumb: thumbImage("magic-pocket-courage.jpg"),
           icon: "sparkles",
           groups: ["adventure", "growth"],
           summary: "小兔波波用星星口袋收集勇气，从害怕黑影到陪朋友走进草丛，一步一步变成小勇士。",
-          audioSources: []
+          audioSources: ["public/assets/real-audio-lite/magic-pocket-courage-lite.mp3"]
         },
         {
           id: "forest-magic-night",
@@ -798,7 +797,7 @@
           icon: "moon-star",
           groups: ["animal", "bedtime", "discovery"],
           summary: "小熊猫乐乐走进夜晚森林，看见萤火虫、发光蘑菇和夜光鹿，发现黑夜也可以很美好。",
-          audioSources: ["https://cdn.jsdelivr.net/gh/songsong066/liuliu-bedtime-stories@86e43fc/public/assets/real-audio-lite/forest-magic-night-lite.mp3"]
+          audioSources: ["public/assets/real-audio-lite/forest-magic-night-lite.mp3"]
         },
         {
           id: "hedgehog-soft-hug",
@@ -827,15 +826,72 @@
           groups: ["animal", "growth", "discovery"],
           summary: "小蜗牛慢慢送快递虽然很慢，却把一路上的花香、鸟鸣和阳光都带给了大家。",
           audioSources: []
+        },
+        {
+          id: "fox-goodnight-jar",
+          title: "小狐狸的“晚安”收集罐",
+          tag: "晚安",
+          category: "睡前安抚",
+          hasRecording: false,
+          minutes: 5,
+          image: coverImage("fox-goodnight-jar.jpg"),
+          thumb: thumbImage("fox-goodnight-jar.jpg"),
+          icon: "moon-star",
+          groups: ["animal", "bedtime", "growth"],
+          summary: "小狐狸跳跳把晚安送给森林里的朋友，发现每一句晚安都会变成心里发光的小星星。",
+          audioSources: []
+        },
+        {
+          id: "sheep-cloud-bed",
+          title: "小绵羊的“呼噜噜”云朵床",
+          tag: "放松",
+          category: "睡前安抚",
+          hasRecording: false,
+          minutes: 5,
+          image: coverImage("sheep-cloud-bed.jpg"),
+          thumb: thumbImage("sheep-cloud-bed.jpg"),
+          icon: "moon-star",
+          groups: ["animal", "bedtime", "growth"],
+          summary: "睡不着的小绵羊软软跟着云朵奶奶放松身体，盖上星光被子，慢慢进入甜甜的梦乡。",
+          audioSources: []
+        },
+        {
+          id: "moon-bakery",
+          title: "月亮面包房",
+          tag: "晚安",
+          category: "睡前安抚",
+          hasRecording: false,
+          minutes: 4,
+          image: coverImage("moon-bakery.jpg"),
+          thumb: thumbImage("moon-bakery.jpg"),
+          icon: "moon-star",
+          groups: ["bedtime", "discovery"],
+          summary: "夜晚开门的面包房用月光、星星和妈妈的拥抱烤出月亮面包，把香味送进梦里。",
+          audioSources: []
+        },
+        {
+          id: "animal-rescue-team",
+          title: "动物小镇的超级救援队",
+          tag: "救援",
+          category: "勇敢冒险",
+          hasRecording: false,
+          minutes: 5,
+          image: coverImage("animal-rescue-team.jpg"),
+          thumb: thumbImage("animal-rescue-team.jpg"),
+          icon: "flame",
+          groups: ["animal", "adventure", "growth", "discovery"],
+          summary: "小狮子呼呼带着大象、狐狸和小白兔分工合作，帮助夜里迷路的小鸭子安全回家。",
+          audioSources: []
         }
       ];
 
       const CATEGORIES = [
+        { id: "all", label: "全部", icon: "library" },
         { id: "animal", label: "动物", icon: "paw" },
         { id: "adventure", label: "冒险", icon: "rocket" },
         { id: "bedtime", label: "晚安", icon: "moon-cloud" },
         { id: "growth", label: "成长", icon: "seedling" },
-        { id: "discovery", label: "发现", icon: "compass", wide: true }
+        { id: "discovery", label: "发现", icon: "compass" }
       ];
 
       const FALLBACK_IMAGE = "public/assets/story-covers-lite/covers/forest-magic-night.jpg";
